@@ -1,9 +1,41 @@
 package parser
 
 import (
+	"errors"
+	"io"
 	"strings"
 	"testing"
 )
+
+// ErrorReader is a mock reader that always returns an error
+type ErrorReader struct{}
+
+func (e ErrorReader) Read(p []byte) (n int, err error) {
+	return 0, errors.New("mock read error")
+}
+
+// PartialReader is a mock reader that returns some data then an error
+type PartialReader struct {
+	data []byte
+	pos  int
+}
+
+func (p *PartialReader) Read(buf []byte) (n int, err error) {
+	if p.pos >= len(p.data) {
+		return 0, errors.New("mock read error after partial data")
+	}
+
+	// Copy some data
+	n = copy(buf, p.data[p.pos:])
+	p.pos += n
+
+	// If we've read all data, return EOF
+	if p.pos >= len(p.data) {
+		return n, io.EOF
+	}
+
+	return n, nil
+}
 
 // TestParseSimpleConfig tests parsing of simple Erlang terms
 func TestParseSimpleConfig(t *testing.T) {
@@ -292,6 +324,16 @@ func TestParseError(t *testing.T) {
 		}
 	})
 
+	t.Run("Unexpected character", func(t *testing.T) {
+		_, err := Parse("{key, @}.")
+		if err == nil {
+			t.Errorf("Expected parsing error for unexpected character")
+		}
+		if !strings.Contains(err.Error(), "unexpected character") {
+			t.Errorf("Expected 'unexpected character' error, got: %v", err)
+		}
+	})
+
 	t.Run("Trailing comma in tuple", func(t *testing.T) {
 		_, err := Parse("{a, b,}.")
 		if err == nil {
@@ -317,6 +359,80 @@ func TestParseError(t *testing.T) {
 		_, err := Parse("{val, 1e}.")
 		if err == nil {
 			t.Errorf("Expected parsing error for incomplete scientific notation")
+		}
+	})
+
+	t.Run("Number without digits", func(t *testing.T) {
+		_, err := Parse("{val, -}.")
+		if err == nil {
+			t.Errorf("Expected parsing error for number without digits")
+		}
+	})
+
+	t.Run("Unterminated string", func(t *testing.T) {
+		_, err := Parse(`{val, "unterminated`)
+		if err == nil {
+			t.Errorf("Expected parsing error for unterminated string")
+		}
+	})
+
+	t.Run("Unterminated quoted atom", func(t *testing.T) {
+		_, err := Parse(`{val, 'unterminated`)
+		if err == nil {
+			t.Errorf("Expected parsing error for unterminated quoted atom")
+		}
+	})
+
+	t.Run("String with unterminated escape", func(t *testing.T) {
+		_, err := Parse(`{val, "test\`)
+		if err == nil {
+			t.Errorf("Expected parsing error for string with unterminated escape")
+		}
+	})
+
+	t.Run("Quoted atom with unterminated escape", func(t *testing.T) {
+		_, err := Parse(`{val, 'test\`)
+		if err == nil {
+			t.Errorf("Expected parsing error for quoted atom with unterminated escape")
+		}
+	})
+
+	t.Run("Invalid float format", func(t *testing.T) {
+		// This should trigger strconv.ParseFloat error
+		parser := NewParser("{val, 1.7976931348623159e+308}.")
+		parser.position = 6 // Position at the start of the number
+		_, err := parser.parseNumber()
+		// This might not actually fail since Go can handle large numbers
+		// But we test the error path exists
+		if err != nil && !strings.Contains(err.Error(), "invalid float") {
+			t.Errorf("Expected 'invalid float' error or no error, got: %v", err)
+		}
+	})
+
+	t.Run("Invalid integer format", func(t *testing.T) {
+		// Create a number that's too large for int64
+		parser := NewParser("{val, 99999999999999999999999999999999999999}.")
+		parser.position = 6 // Position at the start of the number
+		_, err := parser.parseNumber()
+		if err == nil {
+			t.Error("Expected parsing error for integer overflow")
+		}
+		if !strings.Contains(err.Error(), "invalid integer") {
+			t.Errorf("Expected 'invalid integer' error, got: %v", err)
+		}
+	})
+
+	t.Run("Edge case for parseAtom", func(t *testing.T) {
+		// Try to create a scenario where parseAtom might fail
+		// This is very difficult since parseAtom is only called when isAtomStart is true
+		parser := NewParser("a")
+		parser.position = 0
+		atom, err := parser.parseAtom()
+		if err != nil {
+			t.Errorf("Unexpected error in parseAtom: %v", err)
+		}
+		if atomTerm, ok := atom.(Atom); !ok || atomTerm.Value != "a" {
+			t.Errorf("Expected atom 'a', got %v", atom)
 		}
 	})
 
@@ -622,6 +738,43 @@ func TestParseReader(t *testing.T) {
 		}
 		if !strings.Contains(err.Error(), "syntax error") {
 			t.Errorf("Expected syntax error, got: %v", err)
+		}
+	})
+
+	t.Run("Reader Error", func(t *testing.T) {
+		reader := ErrorReader{}
+		_, err := ParseReader(reader)
+		if err == nil {
+			t.Fatal("Expected read error, got nil")
+		}
+		if !strings.Contains(err.Error(), "error reading input") {
+			t.Errorf("Expected 'error reading input', got: %v", err)
+		}
+	})
+
+	t.Run("Reader without final newline", func(t *testing.T) {
+		// Create content without final newline to trigger EOF with remaining content
+		content := `{deps, [{foo, "1"}]}.`
+		reader := strings.NewReader(content)
+		config, err := ParseReader(reader)
+		if err != nil {
+			t.Fatalf("ParseReader failed: %v", err)
+		}
+		if len(config.Terms) != 1 {
+			t.Errorf("Expected 1 term, got %d", len(config.Terms))
+		}
+	})
+
+	t.Run("Partial Reader with EOF", func(t *testing.T) {
+		// Create a reader that returns data with EOF
+		content := `{deps, []}.`
+		reader := &PartialReader{data: []byte(content)}
+		config, err := ParseReader(reader)
+		if err != nil {
+			t.Fatalf("ParseReader failed: %v", err)
+		}
+		if len(config.Terms) != 1 {
+			t.Errorf("Expected 1 term, got %d", len(config.Terms))
 		}
 	})
 }

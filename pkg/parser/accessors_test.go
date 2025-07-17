@@ -130,6 +130,22 @@ func TestGetHelpers(t *testing.T) {
 			t.Error("Did not expect to find app_name")
 		}
 	})
+	t.Run("GetAppName Invalid Type", func(t *testing.T) {
+		inputInvalid := `{app_name, 123}.`
+		configInvalid, _ := Parse(inputInvalid)
+		_, ok := configInvalid.GetAppName()
+		if ok {
+			t.Error("Did not expect to find app_name with invalid type")
+		}
+	})
+	t.Run("GetAppName Empty Elements", func(t *testing.T) {
+		inputEmpty := `{app_name}.`
+		configEmpty, _ := Parse(inputEmpty)
+		_, ok := configEmpty.GetAppName()
+		if ok {
+			t.Error("Did not expect to find app_name with empty elements")
+		}
+	})
 
 	t.Run("GetPlugins", func(t *testing.T) {
 		plugins, ok := config.GetPlugins()

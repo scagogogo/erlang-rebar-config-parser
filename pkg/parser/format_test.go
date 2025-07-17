@@ -5,6 +5,22 @@ import (
 	"testing"
 )
 
+// MockTerm is a mock implementation of Term interface for testing
+type MockTerm struct {
+	value string
+}
+
+func (m MockTerm) String() string {
+	return m.value
+}
+
+func (m MockTerm) Compare(other Term) bool {
+	if otherMock, ok := other.(MockTerm); ok {
+		return m.value == otherMock.value
+	}
+	return false
+}
+
 // TestFormat tests the formatting of Erlang terms
 func TestFormat(t *testing.T) {
 	// Test simple formatting
@@ -278,6 +294,133 @@ func TestFormatEquivalence(t *testing.T) {
 					t.Errorf("Semantic structure changed after formatting with indent %d:\nOriginal: %v\nFormatted: %s\nParsed: %v",
 						indent, original, formatted, parsed)
 				}
+			}
+		})
+	}
+}
+
+// TestFormatUnknownTerm tests the default case in formatTerm function
+func TestFormatUnknownTerm(t *testing.T) {
+	// Create a mock term that doesn't match any known types
+	mockTerm := MockTerm{value: "mock"}
+
+	// Test formatTerm directly with the mock term
+	result := formatTerm(mockTerm, 0, 2)
+	expected := "UNKNOWN_TERM"
+
+	if result != expected {
+		t.Errorf("Expected '%s', got '%s'", expected, result)
+	}
+}
+
+// TestFormatTupleDefaultHandling tests the default tuple formatting path
+func TestFormatTupleDefaultHandling(t *testing.T) {
+	// Create a tuple that doesn't match the special handling conditions
+	// (not starting with an atom, or having complex nested structures)
+	tuple := Tuple{Elements: []Term{
+		Integer{Value: 123},
+		String{Value: "test"},
+		List{Elements: []Term{
+			Atom{Value: "a"},
+			Atom{Value: "b"},
+			Atom{Value: "c"},
+			Atom{Value: "d"}, // This makes it not simple
+		}},
+	}}
+
+	result := formatTerm(tuple, 0, 2)
+
+	// Should use the default tuple formatting (multi-line)
+	if !strings.Contains(result, "{\n") {
+		t.Error("Expected default tuple formatting to use multi-line format")
+	}
+	if !strings.Contains(result, "123") {
+		t.Error("Expected tuple to contain the integer value")
+	}
+	if !strings.Contains(result, "\"test\"") {
+		t.Error("Expected tuple to contain the string value")
+	}
+}
+
+// TestFormatTupleWithMultipleElements tests tuple formatting with more than 2 elements
+func TestFormatTupleWithMultipleElements(t *testing.T) {
+	// Create a tuple starting with an atom and having more than 2 elements
+	// This should trigger the special handling path with multiple elements
+	tuple := Tuple{Elements: []Term{
+		Atom{Value: "key"},
+		String{Value: "value1"},
+		String{Value: "value2"},
+		String{Value: "value3"},
+	}}
+
+	result := formatTerm(tuple, 0, 2)
+
+	// Should use the special atom-based formatting
+	if !strings.Contains(result, "{key, ") {
+		t.Error("Expected tuple to start with '{key, '")
+	}
+	if !strings.Contains(result, "\"value1\"") {
+		t.Error("Expected tuple to contain value1")
+	}
+	if !strings.Contains(result, "\"value2\"") {
+		t.Error("Expected tuple to contain value2")
+	}
+	if !strings.Contains(result, "\"value3\"") {
+		t.Error("Expected tuple to contain value3")
+	}
+}
+
+// TestIsSimpleTermEdgeCases tests edge cases for isSimpleTerm function
+func TestIsSimpleTermEdgeCases(t *testing.T) {
+	tests := []struct {
+		name     string
+		term     Term
+		expected bool
+	}{
+		{
+			name:     "Unknown term type",
+			term:     MockTerm{value: "unknown"},
+			expected: false,
+		},
+		{
+			name: "List with 4 elements (not simple)",
+			term: List{Elements: []Term{
+				Atom{Value: "a"},
+				Atom{Value: "b"},
+				Atom{Value: "c"},
+				Atom{Value: "d"},
+			}},
+			expected: false,
+		},
+		{
+			name: "Tuple with 3 elements (not simple)",
+			term: Tuple{Elements: []Term{
+				Atom{Value: "a"},
+				Atom{Value: "b"},
+				Atom{Value: "c"},
+			}},
+			expected: false,
+		},
+		{
+			name: "List with complex nested element",
+			term: List{Elements: []Term{
+				Atom{Value: "simple"},
+				List{Elements: []Term{
+					Atom{Value: "a"},
+					Atom{Value: "b"},
+					Atom{Value: "c"},
+					Atom{Value: "d"}, // This makes the nested list not simple
+				}},
+			}},
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := isSimpleTerm(tt.term)
+			if result != tt.expected {
+				t.Errorf("isSimpleTerm(%v) = %v, expected %v", tt.term, result, tt.expected)
 			}
 		})
 	}
