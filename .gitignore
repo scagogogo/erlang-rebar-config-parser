@@ -1,3 +1,7 @@
+# =============================================================================
+# Go
+# =============================================================================
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -11,19 +15,223 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Go coverage files
+coverage.txt
+coverage.html
+coverage_*.html
+coverage.out
+*.cover
+c.out
+
+# Go build cache
+.cache/
+
+# Go module download cache
+go.sum.backup
 
 # Go workspace file
 go.work
+go.work.sum
 
-# IDE files
+# Dependency directories
+vendor/
+
+# Air live reload tool
+tmp/
+
+# =============================================================================
+# IDE and Editor Files
+# =============================================================================
+
+# JetBrains IDEs (IntelliJ, GoLand, etc.)
 .idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
 .vscode/
+*.code-workspace
 
-# OS specific files
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Atom
+.atom/
+
+# =============================================================================
+# Operating System Files
+# =============================================================================
+
+# macOS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Output files from example/utility
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# Documentation and Build Files
+# =============================================================================
+
+# VitePress build output
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/node_modules/
+docs/.temp/
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Package manager lock files (keep package-lock.json but ignore others)
+yarn.lock
+pnpm-lock.yaml
+
+# =============================================================================
+# Project Specific Files
+# =============================================================================
+
+# Output files from examples/utilities
 prettyprint
-*.formatted.config 
+*.formatted.config
+*.parsed.config
+*.analyzed.config
+
+# Test configuration files
+test_*.config
+temp_*.config
+sample_*.config
+
+# Benchmark results
+*.bench
+benchmark_*.txt
+
+# Profiling files
+*.prof
+*.pprof
+cpu.prof
+mem.prof
+trace.out
+
+# =============================================================================
+# Logs and Temporary Files
+# =============================================================================
+
+# Log files
+*.log
+logs/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# =============================================================================
+# Security and Sensitive Files
+# =============================================================================
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# API keys and secrets
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# =============================================================================
+# Development and Testing
+# =============================================================================
+
+# Test artifacts
+testdata/output/
+test-results/
+coverage/
+
+# Development databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Mock files (if auto-generated)
+*_mock.go
+mock_*.go
+
+# =============================================================================
+# CI/CD and Deployment
+# =============================================================================
+
+# Docker
+.dockerignore.bak
+
+# Kubernetes
+*.kubeconfig
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# =============================================================================
+# Documentation Generation
+# =============================================================================
+
+# Generated documentation
+docs/generated/
+api-docs/
+*.html.generated
+
+# Markdown temporary files
+*.md.backup
