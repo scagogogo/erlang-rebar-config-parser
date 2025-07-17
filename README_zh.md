@@ -1,6 +1,8 @@
 # Erlang Rebar 配置解析器
 
-[English Documentation](README.md) | [📖 完整文档](https://scagogogo.github.io/erlang-rebar-config-parser/zh/)
+> 🚀 **[📖 完整文档和 API 参考](https://scagogogo.github.io/erlang-rebar-config-parser/zh/)** 🚀
+
+[English Documentation](README.md) | [中文文档](https://scagogogo.github.io/erlang-rebar-config-parser/zh/)
 
 一个用于解析 Erlang rebar 配置文件的 Go 库。该库允许您将 `rebar.config` 文件解析为结构化的 Go 对象，使得以编程方式访问和操作 Erlang 项目配置变得简单。
 

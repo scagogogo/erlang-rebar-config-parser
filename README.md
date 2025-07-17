@@ -1,6 +1,8 @@
 # Erlang Rebar Config Parser
 
-[中文文档](README_zh.md) | [📖 Documentation](https://scagogogo.github.io/erlang-rebar-config-parser/)
+> 🚀 **[📖 Complete Documentation & API Reference](https://scagogogo.github.io/erlang-rebar-config-parser/)** 🚀
+
+[中文文档](README_zh.md) | [English Documentation](https://scagogogo.github.io/erlang-rebar-config-parser/)
 
 [![Go Tests and Examples](https://github.com/scagogogo/erlang-rebar-config-parser/actions/workflows/go.yml/badge.svg)](https://github.com/scagogogo/erlang-rebar-config-parser/actions/workflows/go.yml)
 [![Documentation](https://github.com/scagogogo/erlang-rebar-config-parser/actions/workflows/docs.yml/badge.svg)](https://github.com/scagogogo/erlang-rebar-config-parser/actions/workflows/docs.yml)
