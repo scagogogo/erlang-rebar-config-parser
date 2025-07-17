@@ -1,0 +1,249 @@
+# =============================================================================
+# Git Attributes for Erlang Rebar Config Parser
+# =============================================================================
+# This file ensures consistent behavior across different platforms and
+# provides proper handling of different file types in Git.
+
+# =============================================================================
+# Default Behavior
+# =============================================================================
+# Automatically normalize line endings for all text files
+* text=auto
+
+# =============================================================================
+# Source Code Files
+# =============================================================================
+# Go source files
+*.go text eol=lf
+
+# Go module files
+go.mod text eol=lf
+go.sum text eol=lf
+go.work text eol=lf
+go.work.sum text eol=lf
+
+# =============================================================================
+# Configuration Files
+# =============================================================================
+# Erlang/Rebar configuration files (project-specific)
+*.config text eol=lf
+rebar.config text eol=lf
+rebar.lock text eol=lf
+sys.config text eol=lf
+vm.args text eol=lf
+
+# JSON configuration files
+*.json text eol=lf
+package.json text eol=lf
+package-lock.json text eol=lf
+
+# YAML configuration files
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# TOML configuration files
+*.toml text eol=lf
+
+# INI configuration files
+*.ini text eol=lf
+
+# Environment files
+.env* text eol=lf
+
+# =============================================================================
+# Documentation Files
+# =============================================================================
+# Markdown files
+*.md text eol=lf
+*.markdown text eol=lf
+
+# Text files
+*.txt text eol=lf
+README text eol=lf
+LICENSE text eol=lf
+CHANGELOG text eol=lf
+AUTHORS text eol=lf
+CONTRIBUTORS text eol=lf
+
+# =============================================================================
+# Web Files (for documentation)
+# =============================================================================
+# HTML files
+*.html text eol=lf
+*.htm text eol=lf
+
+# CSS files
+*.css text eol=lf
+*.scss text eol=lf
+*.sass text eol=lf
+*.less text eol=lf
+
+# JavaScript files
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.vue text eol=lf
+
+# XML files
+*.xml text eol=lf
+*.xsl text eol=lf
+*.xslt text eol=lf
+
+# =============================================================================
+# Shell Scripts and Makefiles
+# =============================================================================
+# Shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+
+# Makefiles
+Makefile text eol=lf
+makefile text eol=lf
+*.mk text eol=lf
+
+# Dockerfile
+Dockerfile text eol=lf
+*.dockerfile text eol=lf
+
+# =============================================================================
+# Data Files
+# =============================================================================
+# CSV files
+*.csv text eol=lf
+
+# SQL files
+*.sql text eol=lf
+
+# Log files
+*.log text eol=lf
+
+# =============================================================================
+# Binary Files
+# =============================================================================
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text eol=lf
+*.webp binary
+*.bmp binary
+*.tiff binary
+
+# Fonts
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+*.xz binary
+*.7z binary
+*.rar binary
+
+# Executables
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.app binary
+
+# =============================================================================
+# Git LFS (Large File Storage) - if needed
+# =============================================================================
+# Uncomment these lines if you want to use Git LFS for large files
+# *.zip filter=lfs diff=lfs merge=lfs -text
+# *.tar.gz filter=lfs diff=lfs merge=lfs -text
+# *.pdf filter=lfs diff=lfs merge=lfs -text
+
+# =============================================================================
+# Language-specific Settings
+# =============================================================================
+# Ensure shell scripts are executable on Unix systems
+*.sh text eol=lf
+scripts/* text eol=lf
+
+# =============================================================================
+# IDE and Editor Files
+# =============================================================================
+# EditorConfig
+.editorconfig text eol=lf
+
+# VS Code
+.vscode/*.json text eol=lf
+
+# =============================================================================
+# CI/CD Files
+# =============================================================================
+# GitHub Actions
+.github/workflows/*.yml text eol=lf
+.github/workflows/*.yaml text eol=lf
+
+# Docker
+docker-compose.yml text eol=lf
+docker-compose.yaml text eol=lf
+
+# =============================================================================
+# Special Git Files
+# =============================================================================
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.gitmodules text eol=lf
+
+# =============================================================================
+# Export Ignore
+# =============================================================================
+# Files that should not be included in git archive exports
+.gitattributes export-ignore
+.gitignore export-ignore
+.github/ export-ignore
+scripts/test-gitignore.sh export-ignore
+docs/node_modules/ export-ignore
+docs/.vitepress/dist/ export-ignore
+docs/.vitepress/cache/ export-ignore
+
+# =============================================================================
+# Diff Settings
+# =============================================================================
+# Use Go-specific diff driver for Go files (if available)
+*.go diff=golang
+
+# Use appropriate diff drivers for other languages
+*.md diff=markdown
+*.json diff=json
+
+# =============================================================================
+# Merge Settings
+# =============================================================================
+# Don't merge generated files
+go.sum merge=ours
+package-lock.json merge=ours
+
+# =============================================================================
+# Linguist Settings (for GitHub language detection)
+# =============================================================================
+# Mark documentation as documentation (not code)
+docs/ linguist-documentation
+*.md linguist-documentation
+
+# Mark test files as test code
+*_test.go linguist-language=Go
+test/ linguist-language=Go
+
+# Mark generated files
+docs/.vitepress/dist/* linguist-generated
+coverage.html linguist-generated
+coverage_*.html linguist-generated
+
+# Mark vendor directories
+vendor/ linguist-vendored
+docs/node_modules/ linguist-vendored
