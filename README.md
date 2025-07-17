@@ -1,14 +1,22 @@
 # Erlang Rebar Config Parser
 
+[中文文档](README_zh.md) | [📖 Documentation](https://scagogogo.github.io/erlang-rebar-config-parser/)
+
 [![Go Tests and Examples](https://github.com/scagogogo/erlang-rebar-config-parser/actions/workflows/go.yml/badge.svg)](https://github.com/scagogogo/erlang-rebar-config-parser/actions/workflows/go.yml)
+[![Documentation](https://github.com/scagogogo/erlang-rebar-config-parser/actions/workflows/docs.yml/badge.svg)](https://github.com/scagogogo/erlang-rebar-config-parser/actions/workflows/docs.yml)
 [![GoDoc](https://godoc.org/github.com/scagogogo/erlang-rebar-config-parser?status.svg)](https://godoc.org/github.com/scagogogo/erlang-rebar-config-parser)
 [![Go Report Card](https://goreportcard.com/badge/github.com/scagogogo/erlang-rebar-config-parser)](https://goreportcard.com/report/github.com/scagogogo/erlang-rebar-config-parser)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/scagogogo/erlang-rebar-config-parser)](https://github.com/scagogogo/erlang-rebar-config-parser/blob/main/go.mod)
 [![License](https://img.shields.io/github/license/scagogogo/erlang-rebar-config-parser)](https://github.com/scagogogo/erlang-rebar-config-parser/blob/main/LICENSE)
 
-A Go library for parsing Erlang rebar configuration files. This library provides functionality to read and parse Erlang-syntax rebar.config files and access their contents in a structured way.
+A Go library for parsing Erlang rebar configuration files. This library allows you to parse `rebar.config` files into structured Go objects, making it easy to programmatically access and manipulate Erlang project configurations.
 
-> **中文介绍**: 这是一个用于解析 Erlang rebar 配置文件的 Go 库。该库提供了读取和解析 Erlang 语法的 rebar.config 文件的功能，并以结构化的方式访问其内容。所有函数均有完整的中文注释，便于中文用户理解和使用。
+## 📚 Documentation
+
+- **[Complete Documentation](https://scagogogo.github.io/erlang-rebar-config-parser/)** - Full documentation website
+- **[Getting Started Guide](https://scagogogo.github.io/erlang-rebar-config-parser/guide/getting-started)** - Quick start tutorial
+- **[API Reference](https://scagogogo.github.io/erlang-rebar-config-parser/api/)** - Complete API documentation
+- **[Examples](https://scagogogo.github.io/erlang-rebar-config-parser/examples/)** - Real-world examples
 
 ## 🌟 Features
 
@@ -21,7 +29,7 @@ A Go library for parsing Erlang rebar configuration files. This library provides
 - Compare functionality to check term equality
 - Continuous Integration via GitHub Actions
 - Comprehensive documentation with examples in English and Chinese
-- 100% test coverage
+- 98% test coverage with comprehensive edge case testing
 
 ## 📦 Installation
 
